@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="我想靜靜｜活動總召救援器：幫你整理活動待辦、判斷優先順序，事情太多時只留下現在最重要的三件事。" />
+  <title>我想靜靜｜活動總召救援器</title>
+  <style>
+    :root{
+      --bg:#fff9fb; --panel:#ffffff; --text:#3f3740; --muted:#7f7480;
+      --border:#eadfe5; --shadow:0 12px 35px rgba(91,67,79,.09);
+      --pink:#d9829a; --pink-dark:#b85f79; --rose:#f7dce5;
+      --purple:#9b87b5; --green:#78a98b; --green-soft:#e7f3eb;
+      --yellow:#c99c45; --yellow-soft:#fff1cf; --red:#d76666;
+      --red-soft:#fde7e7; --blue:#6f96b6; --blue-soft:#e7f0f7;
+      --radius:22px;
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth}
+    body{
+      margin:0; min-height:100vh; color:var(--text);
+      font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,-apple-system,"Segoe UI",sans-serif;
+      background:radial-gradient(circle at 10% 0%,#ffeaf1 0,transparent 28%),radial-gradient(circle at 95% 10%,#eee9fb 0,transparent 25%),var(--bg);
+    }
+    button,input,select{font:inherit} button{cursor:pointer}
+    .app{width:min(1120px,calc(100% - 28px));margin:0 auto;padding:30px 0 56px}
+    .hero{position:relative;overflow:hidden;background:rgba(255,255,255,.88);border:1px solid rgba(234,223,229,.95);border-radius:30px;box-shadow:var(--shadow);padding:30px;margin-bottom:20px}
+    .hero::after{content:"";position:absolute;width:180px;height:180px;right:-55px;top:-55px;border-radius:50%;background:linear-gradient(135deg,#ffe1ea,#eee5fa);opacity:.7}
+    .brand{display:flex;gap:18px;align-items:center;position:relative;z-index:1}
+    .robot{width:72px;height:72px;flex:0 0 72px;display:grid;place-items:center;border-radius:24px;font-size:38px;background:linear-gradient(145deg,#ffe3ec,#f0e9fb);border:1px solid #efdce3;box-shadow:0 8px 18px rgba(102,74,91,.08)}
+    .hero h1{margin:0;font-size:clamp(28px,4vw,44px);letter-spacing:.04em}.hero p{margin:7px 0 0;color:var(--muted);font-size:16px;line-height:1.7}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .card{background:rgba(255,255,255,.92);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);padding:22px}
+    .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+    .stat{padding:16px;border-radius:18px;background:#fffafb;border:1px solid var(--border)}
+    .stat .label{color:var(--muted);font-size:13px;margin-bottom:7px}.stat .value{font-size:28px;font-weight:800;line-height:1}
+    .progress-wrap{margin-top:16px}.progress-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px;font-size:14px;color:var(--muted)}
+    .progress{height:13px;background:#f4edf0;border-radius:99px;overflow:hidden}.progress>div{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--pink),var(--purple));transition:width .3s ease}
+    .recommendation{min-height:100%;background:linear-gradient(145deg,#fff7fa,#f8f4ff)}
+    .eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:800;color:var(--pink-dark);background:var(--rose);padding:7px 11px;border-radius:999px;margin-bottom:12px}
+    .recommendation h2{font-size:22px;margin:0 0 8px}.focus-task{font-size:24px;font-weight:900;line-height:1.35;margin:10px 0}.reason{color:var(--muted);line-height:1.7;margin:0}
+    .panic-btn{width:100%;border:none;border-radius:18px;padding:15px 18px;margin-top:18px;font-weight:900;font-size:16px;color:#fff;background:linear-gradient(135deg,#df6b76,#c9526d);box-shadow:0 10px 24px rgba(199,78,104,.22);transition:.2s ease}
+    .panic-btn:hover{transform:translateY(-1px);box-shadow:0 12px 28px rgba(199,78,104,.28)}
+    .section-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px}.section-title h2{margin:0;font-size:21px}.section-title small{color:var(--muted)}
+    .form-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1.2fr;gap:12px;align-items:end}
+    .field label{display:block;font-size:13px;color:var(--muted);margin:0 0 7px 2px;font-weight:700}
+    input,select{width:100%;border:1px solid var(--border);background:#fffdfd;color:var(--text);padding:12px 13px;border-radius:14px;outline:none;transition:.18s ease}
+    input:focus,select:focus{border-color:#cfa6b5;box-shadow:0 0 0 4px rgba(217,130,154,.10)}
+    .add-btn{border:none;border-radius:14px;padding:13px 16px;background:var(--text);color:#fff;font-weight:800;white-space:nowrap}.form-actions{display:flex;justify-content:flex-end;margin-top:14px}
+    .toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}.filters{display:flex;gap:8px;flex-wrap:wrap}
+    .filter-btn{border:1px solid var(--border);background:#fff;color:var(--muted);border-radius:999px;padding:8px 13px;font-size:13px;font-weight:800}.filter-btn.active{background:var(--text);color:#fff;border-color:var(--text)}
+    .clear-btn{border:1px solid #f1c9cf;background:#fff8f9;color:#b95d6b;border-radius:12px;padding:8px 12px;font-size:13px;font-weight:800}
+    .task-list{display:grid;gap:12px}.task{display:grid;grid-template-columns:8px 1fr auto;gap:14px;align-items:stretch;border:1px solid var(--border);border-radius:18px;overflow:hidden;background:#fff;transition:.18s ease}.task:hover{transform:translateY(-1px);box-shadow:0 8px 22px rgba(78,57,67,.06)}
+    .priority-strip.high{background:var(--red)}.priority-strip.medium{background:var(--yellow)}.priority-strip.low{background:var(--green)}
+    .task-main{padding:15px 0;min-width:0}.task-title{font-weight:900;font-size:17px;margin-bottom:8px;word-break:break-word}.task.completed .task-title{text-decoration:line-through;color:#9b9098}.task.completed{opacity:.72}
+    .meta{display:flex;flex-wrap:wrap;gap:7px;align-items:center}.pill{display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:750;background:#f7f2f4;color:#736873}
+    .pill.deadline.overdue{background:var(--red-soft);color:#b84949}.pill.deadline.today{background:#ffe8df;color:#b65f42}.pill.deadline.soon{background:var(--yellow-soft);color:#8a671f}
+    .task-actions{padding:13px;display:flex;gap:8px;align-items:center;align-self:center}.icon-btn{border:none;border-radius:12px;padding:9px 11px;font-weight:800;background:#f5eff2;color:#665c64;white-space:nowrap}.icon-btn.complete{background:var(--green-soft);color:#4c8060}.icon-btn.undo{background:var(--blue-soft);color:#547b98}.icon-btn.delete{background:var(--red-soft);color:#b95757}
+    .empty{text-align:center;border:1px dashed #ddcfd5;border-radius:18px;padding:34px 18px;color:var(--muted);background:#fffafb}.empty .emoji{font-size:34px;margin-bottom:8px}
+    .footer-note{text-align:center;color:#9c9198;font-size:12px;margin-top:18px}
+    .panic-overlay{position:fixed;inset:0;z-index:1000;background:rgba(72,57,67,.42);backdrop-filter:blur(7px);display:none;align-items:center;justify-content:center;padding:18px}.panic-overlay.show{display:flex}
+    .panic-card{width:min(620px,100%);max-height:90vh;overflow:auto;background:#fffdfd;border:1px solid #f0d7de;border-radius:30px;padding:26px;box-shadow:0 25px 80px rgba(70,48,60,.22)}
+    .panic-head{text-align:center;margin-bottom:20px}.panic-head .big-robot{font-size:48px}.panic-head h2{margin:8px 0 7px;font-size:28px}.panic-head p{color:var(--muted);line-height:1.7;margin:0}
+    .panic-count{margin:14px auto 0;width:max-content;max-width:100%;background:var(--rose);color:var(--pink-dark);border-radius:999px;padding:7px 12px;font-size:13px;font-weight:900}
+    .panic-list{display:grid;gap:11px;margin:20px 0}.panic-item{display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:center;padding:14px;border:1px solid var(--border);border-radius:18px;background:#fff}.panic-number{width:42px;height:42px;display:grid;place-items:center;border-radius:14px;background:var(--red-soft);color:#b84f59;font-weight:900}.panic-item strong{display:block;margin-bottom:4px}.panic-item span{color:var(--muted);font-size:13px}
+    .calm-btn{width:100%;border:none;background:linear-gradient(135deg,var(--green),#6b9e81);color:#fff;padding:14px 18px;border-radius:16px;font-weight:900;font-size:16px}
+    .toast{position:fixed;right:18px;bottom:18px;background:#403940;color:#fff;border-radius:14px;padding:12px 15px;box-shadow:0 12px 35px rgba(0,0,0,.18);transform:translateY(20px);opacity:0;pointer-events:none;transition:.25s ease;z-index:1500;max-width:min(360px,calc(100vw - 36px))}.toast.show{transform:translateY(0);opacity:1}
+
+    /* ===== 紓壓互動區 ===== */
+    .relief-section{margin-top:18px}
+    .relief-intro{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px}
+    .relief-intro p{margin:5px 0 0;color:var(--muted);line-height:1.65}
+    .privacy-note{flex:0 0 auto;font-size:12px;color:#806d77;background:#fff5f8;border:1px solid #f0dce3;border-radius:999px;padding:7px 10px}
+    .relief-grid{display:grid;grid-template-columns:1.25fr .8fr .95fr;gap:14px}
+    .relief-card{border:1px solid var(--border);border-radius:20px;padding:18px;background:#fffdfd;min-width:0}
+    .relief-card h3{margin:0 0 6px;font-size:18px}.relief-card .sub{margin:0 0 14px;color:var(--muted);font-size:13px;line-height:1.6}
+    textarea{width:100%;min-height:128px;resize:vertical;border:1px solid var(--border);background:#fff;color:var(--text);padding:13px;border-radius:15px;outline:none;font:inherit;line-height:1.7;transition:.18s ease}
+    textarea:focus{border-color:#cfa6b5;box-shadow:0 0 0 4px rgba(217,130,154,.10)}
+    .moods{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+    .mood-btn{border:1px solid var(--border);background:#fff;border-radius:13px;padding:8px 10px;color:var(--muted);font-weight:800;min-width:46px}
+    .mood-btn.active{background:var(--rose);border-color:#e8bcc9;color:var(--pink-dark)}
+    .vent-actions{display:flex;justify-content:space-between;gap:9px;align-items:center;flex-wrap:wrap;margin-top:10px}
+    .soft-btn{border:none;border-radius:13px;padding:10px 13px;font-weight:850;background:var(--purple-soft);color:#6f5a8a}
+    .soft-btn.primary{background:var(--pink);color:white}.soft-btn.danger{background:var(--red-soft);color:#ac5058}
+    .journal-list{display:grid;gap:8px;margin-top:14px}
+    .journal-item{border:1px solid var(--border);border-radius:14px;background:#fff;padding:11px 12px}
+    .journal-top{display:flex;justify-content:space-between;align-items:center;gap:10px;color:var(--muted);font-size:12px;margin-bottom:5px}
+    .journal-text{white-space:pre-wrap;line-height:1.6;font-size:13px;word-break:break-word}
+    .journal-delete{border:0;background:transparent;color:#bd737c;padding:2px 4px;font-size:12px}
+    .merit-wrap{text-align:center;display:grid;place-items:center;height:100%}
+    .merit-count{font-size:46px;font-weight:950;line-height:1;margin:10px 0 4px;color:var(--pink-dark)}
+    .merit-label{color:var(--muted);font-size:13px}
+    .merit-btn{position:relative;width:116px;height:116px;border-radius:50%;border:1px solid #efd8df;background:radial-gradient(circle at 35% 30%,#fff6f8,#f0dbe3);box-shadow:0 12px 25px rgba(128,79,94,.12),inset 0 -8px 14px rgba(177,120,137,.08);transition:transform .09s ease;margin:12px 0 8px;display:grid;place-items:center;overflow:visible}.merit-fish{width:72px;height:72px;display:block;filter:drop-shadow(0 4px 4px rgba(89,54,61,.12))}.merit-fish .fish-body{fill:#b76f45}.merit-fish .fish-detail{fill:#8d5236}.merit-fish .fish-eye{fill:#fff}.merit-fish .fish-pupil{fill:#3f3740}
+    .merit-btn:active{transform:scale(.93)}
+    .merit-tip{color:var(--muted);font-size:12px;min-height:20px}
+    .plus-one{position:absolute;left:50%;top:10%;transform:translateX(-50%);color:var(--pink-dark);font-weight:950;pointer-events:none;animation:floatUp .65s ease forwards}
+    @keyframes floatUp{0%{opacity:0;transform:translate(-50%,12px) scale(.8)}30%{opacity:1}100%{opacity:0;transform:translate(-50%,-30px) scale(1.15)}}
+    .reset-link{border:0;background:transparent;color:#ad8e98;font-size:12px;text-decoration:underline;padding:4px}
+    .breath-wrap{text-align:center;display:grid;place-items:center;height:100%}
+    .breath-circle{width:112px;height:112px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#e9f2f4,#eee8f7);border:1px solid #dce8e8;transition:transform 4s ease,background .4s ease;margin:14px 0}
+    .breath-circle.inhale{transform:scale(1.22);background:linear-gradient(145deg,#e4f3eb,#eee9fa)}
+    .breath-circle.exhale{transform:scale(.88);background:linear-gradient(145deg,#f9e9ef,#eee8f7)}
+    .breath-word{font-weight:950;font-size:17px}.breath-count{font-size:12px;color:var(--muted);margin-top:4px}
+    .breath-btn{border:none;border-radius:13px;padding:10px 14px;background:var(--green-soft);color:#47795b;font-weight:900}
+    .breath-btn:disabled{opacity:.55;cursor:not-allowed}
+    .stress-tip{margin-top:13px;border-radius:15px;background:#fff8e9;border:1px solid #f1e3bd;padding:10px 12px;color:#816627;font-size:12px;line-height:1.6}
+    .panic-relief-btn{width:100%;border:1px solid #e7d9e1;background:#fff7fa;color:#9b5f76;padding:12px 16px;border-radius:15px;font-weight:900;margin-top:9px}
+
+
+    .bubble-card{grid-column:1/-1}
+    .bubble-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+    .bubble-status{font-size:12px;color:var(--muted);font-weight:800;background:#fff5f8;border:1px solid #f0dce3;border-radius:999px;padding:7px 10px}
+    .bubble-board{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;padding:10px 0 4px}
+    .anxiety-bubble{width:92px;height:92px;border:none;border-radius:50%;background:radial-gradient(circle at 30% 25%,#fff 0 5%,#ffdce7 20%,#efb6ca 72%,#dc8faa 100%);color:#704a59;font-size:13px;font-weight:900;line-height:1.2;padding:10px;box-shadow:inset -8px -10px 18px rgba(157,92,113,.12),0 8px 18px rgba(128,79,94,.10);transition:transform .16s ease,opacity .18s ease,filter .18s ease;position:relative}
+    .anxiety-bubble::after{content:"";position:absolute;width:20px;height:10px;border-radius:50%;background:rgba(255,255,255,.55);left:19px;top:16px;transform:rotate(-28deg)}
+    .anxiety-bubble:hover{transform:translateY(-2px) scale(1.03)}
+    .anxiety-bubble:active{transform:scale(.90)}
+    .anxiety-bubble.popped{transform:scale(.15) rotate(14deg);opacity:0;filter:blur(2px);pointer-events:none}
+    .bubble-reset{border:1px solid #ead8df;background:#fff8fa;color:#9b5f76;border-radius:12px;padding:9px 12px;font-weight:900}
+
+    @media(max-width:900px){.grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr 1fr}.form-grid .field:first-child{grid-column:1/-1}.relief-grid{grid-template-columns:1fr 1fr}.relief-card.journal-card{grid-column:1/-1}}
+    @media(max-width:640px){.app{width:min(100% - 20px,1120px);padding-top:14px}.relief-grid{grid-template-columns:1fr}.relief-card.journal-card{grid-column:auto}.relief-intro{flex-direction:column}.privacy-note{align-self:flex-start}.hero{padding:22px 18px;border-radius:24px}.robot{width:60px;height:60px;flex-basis:60px;font-size:31px}.card{padding:17px}.summary{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.form-grid .field:first-child{grid-column:auto}.form-actions .add-btn{width:100%}.task{grid-template-columns:7px 1fr}.task-actions{grid-column:2;padding:0 12px 13px 0;justify-content:flex-start;flex-wrap:wrap}.focus-task{font-size:21px}}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="hero">
+      <div class="brand">
+        <div class="robot" aria-hidden="true">🤖</div>
+        <div>
+          <h1>我想靜靜</h1>
+          <p><strong>活動總召救援器</strong><br>事情很多沒關係，先處理現在最重要的事。</p>
+        </div>
+      </div>
+    </header>
+
+    <section class="grid" aria-label="活動總覽">
+      <div class="card">
+        <div class="summary">
+          <div class="stat"><div class="label">全部任務</div><div class="value" id="totalCount">0</div></div>
+          <div class="stat"><div class="label">待處理</div><div class="value" id="pendingCount">0</div></div>
+          <div class="stat"><div class="label">已完成</div><div class="value" id="doneCount">0</div></div>
+          <div class="stat"><div class="label">今日累積功德</div><div class="value" id="homeMeritCount">0</div></div>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-row"><span>活動準備進度</span><strong id="progressText">0%</strong></div>
+          <div class="progress" aria-label="活動準備進度"><div id="progressBar"></div></div>
+        </div>
+      </div>
+
+      <div class="card recommendation">
+        <div class="eyebrow">🤖 我想靜靜的建議</div>
+        <h2>現在先做：</h2>
+        <div class="focus-task" id="focusTask">目前沒有待處理任務 🎉</div>
+        <p class="reason" id="focusReason">可以休息一下，或新增下一件活動工作。</p>
+        <button class="panic-btn" id="panicBtn" type="button">💥 我要爆炸了!!!</button>
+      </div>
+    </section>
+
+    <section class="card" style="margin-top:18px;">
+      <div class="section-title"><div><h2>＋ 新增活動工作</h2><small>輸入任務後，我會幫你重新排序。</small></div></div>
+      <form id="taskForm">
+        <div class="form-grid">
+          <div class="field"><label for="taskName">任務名稱</label><input id="taskName" maxlength="60" placeholder="例如：確認主持人到場時間" required /></div>
+          <div class="field"><label for="category">分類</label><select id="category"><option>舞台／設備</option><option>工作人員</option><option>表演者／主持人</option><option>廠商</option><option>宣傳</option><option>物資</option><option>行政</option><option>場地</option><option>財務／預算</option><option>其他</option></select></div>
+          <div class="field"><label for="importance">重要程度</label><select id="importance"><option value="high">高</option><option value="medium" selected>中</option><option value="low">低</option></select></div>
+          <div class="field"><label for="urgency">緊急程度</label><select id="urgency"><option value="high">高</option><option value="medium" selected>中</option><option value="low">低</option></select></div>
+          <div class="field"><label for="deadline">截止日期</label><input id="deadline" type="date" /></div>
+        </div>
+        <div class="form-actions"><button class="add-btn" type="submit">＋ 加入任務</button></div>
+      </form>
+    </section>
+
+    <section class="card" style="margin-top:18px;">
+      <div class="section-title"><div><h2>活動待辦</h2><small>會依優先度自動排列。</small></div></div>
+      <div class="toolbar">
+        <div class="filters" aria-label="任務篩選">
+          <button class="filter-btn active" data-filter="all" type="button">全部</button>
+          <button class="filter-btn" data-filter="pending" type="button">待處理</button>
+          <button class="filter-btn" data-filter="high" type="button">高優先</button>
+          <button class="filter-btn" data-filter="done" type="button">已完成</button>
+        </div>
+        <button class="clear-btn" id="clearBtn" type="button">清除全部資料</button>
+      </div>
+      <div class="task-list" id="taskList"></div>
+    </section>
+
+
+
+    <section class="card relief-section" id="reliefSection">
+      <div class="relief-intro">
+        <div>
+          <h2 style="margin:0;font-size:21px;">🌷 總召紓壓小角落</h2>
+          <p>如果現在不想再看待辦，就先把腦袋裡的東西倒出來。休息一下，不算偷懶。</p>
+        </div>
+        <div class="privacy-note">🔒 心情紀錄只存在你的瀏覽器</div>
+      </div>
+
+      <div class="relief-grid">
+        <div class="relief-card journal-card">
+          <h3>📝 焦慮排氣站</h3>
+          <p class="sub">不用寫得有道理，想抱怨什麼就寫什麼。存下來之後，先暫時交給「靜靜」保管。</p>
+          <div class="moods" aria-label="現在的心情">
+            <button type="button" class="mood-btn" data-mood="😌">😌 還好</button>
+            <button type="button" class="mood-btn" data-mood="😵‍💫">😵‍💫 好亂</button>
+            <button type="button" class="mood-btn" data-mood="😣">😣 焦慮</button>
+            <button type="button" class="mood-btn" data-mood="🤯">🤯 爆炸</button>
+          </div>
+          <textarea id="ventText" maxlength="800" placeholder="例如：我現在真的很怕舞台來不及、廠商又沒有回訊息，而且還有三個人一直問我同一件事……"></textarea>
+          <div class="vent-actions">
+            <span id="ventCount" style="font-size:12px;color:var(--muted);">0 / 800</span>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button type="button" class="soft-btn danger" id="clearVentBtn">清空輸入</button>
+              <button type="button" class="soft-btn primary" id="saveVentBtn">交給靜靜保管</button>
+            </div>
+          </div>
+          <div class="journal-list" id="journalList"></div>
+        </div>
+
+        <div class="relief-card">
+          <div class="merit-wrap">
+            <h3>電子木魚</h3>
+            <p class="sub">事情做不完沒關係，先敲一下。至少功德有在累積。</p>
+            <button type="button" class="merit-btn" id="meritBtn" aria-label="敲電子木魚，功德加一">
+              <svg class="merit-fish" viewBox="0 0 120 90" role="img" aria-label="木魚造型">
+                <path class="fish-body" d="M19 47c9-23 31-35 57-30 13 3 23 11 28 20l12-10-2 27 2 26-13-10c-8 10-21 17-36 18-24 1-42-11-48-29l-13-6 13-6z"/>
+                <path class="fish-detail" d="M35 48c16-13 37-15 55-6-12 1-22 6-29 15-9-5-17-7-26-9z"/>
+                <circle class="fish-eye" cx="78" cy="36" r="7"/>
+                <circle class="fish-pupil" cx="80" cy="37" r="3"/>
+                <path d="M29 59c14 7 28 8 41 4" fill="none" stroke="#8d5236" stroke-width="4" stroke-linecap="round"/>
+              </svg>
+            </button>
+            <div class="merit-count" id="meritCount">0</div>
+            <div class="merit-label">今日總功德</div>
+            <div class="merit-tip" id="meritTip">敲一下，功德 +1</div>
+            <button type="button" class="reset-link" id="resetMeritBtn">功德歸零</button>
+          </div>
+        </div>
+
+        <div class="relief-card">
+          <div class="breath-wrap">
+            <h3>🌿 跟靜靜呼吸三輪</h3>
+            <p class="sub">不用解決問題，現在只跟著圓圈吸氣、停一下、慢慢呼氣。</p>
+            <div class="breath-circle" id="breathCircle">
+              <div>
+                <div class="breath-word" id="breathWord">準備好</div>
+                <div class="breath-count" id="breathCount">約 36 秒</div>
+              </div>
+            </div>
+            <button type="button" class="breath-btn" id="breathBtn">開始呼吸</button>
+            <div class="stress-tip" id="stressTip">💡 這不是要你「別焦慮」，只是先幫腦袋空出一點位置。</div>
+          </div>
+        </div>
+
+        <div class="relief-card bubble-card">
+          <div class="bubble-head">
+            <div>
+              <h3>🫧 戳爆焦慮泡泡</h3>
+              <p class="sub">哪一件事看到就煩？先不用解決，戳掉它再說。泡泡只是紓壓小遊戲，不會刪除真正的待辦。</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <span class="bubble-status" id="bubbleStatus">已戳 0 / 12</span>
+              <button type="button" class="bubble-reset" id="bubbleResetBtn">重新長一批</button>
+            </div>
+          </div>
+          <div class="bubble-board" id="bubbleBoard" aria-label="焦慮泡泡小遊戲"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer-note">資料會保存在這台裝置的瀏覽器中（LocalStorage）。</div>
+  </main>
+
+  <div class="panic-overlay" id="panicOverlay" role="dialog" aria-modal="true" aria-labelledby="panicTitle">
+    <div class="panic-card">
+      <div class="panic-head">
+        <div class="big-robot" aria-hidden="true">🤖</div>
+        <h2 id="panicTitle">好，先不要一次看全部。</h2>
+        <p>你現在只需要把注意力放在最重要的幾件事。</p>
+        <div class="panic-count" id="panicCount">目前有 0 件未完成</div>
+      </div>
+      <div class="panic-list" id="panicList"></div>
+      <button class="calm-btn" id="calmBtn" type="button">我冷靜了</button>
+      <button class="panic-relief-btn" id="panicReliefBtn" type="button">我還沒冷靜，先去發洩一下</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const STORAGE_KEY="woxiangjingjing_tasks_v1";
+    const JOURNAL_KEY="woxiangjingjing_journal_v1";
+    const MERIT_KEY="woxiangjingjing_merit_v1";
+    const taskForm=document.getElementById("taskForm"),taskName=document.getElementById("taskName"),category=document.getElementById("category"),importance=document.getElementById("importance"),urgency=document.getElementById("urgency"),deadline=document.getElementById("deadline");
+    const taskList=document.getElementById("taskList"),totalCount=document.getElementById("totalCount"),pendingCount=document.getElementById("pendingCount"),doneCount=document.getElementById("doneCount"),progressText=document.getElementById("progressText"),progressBar=document.getElementById("progressBar"),focusTask=document.getElementById("focusTask"),focusReason=document.getElementById("focusReason");
+    const panicBtn=document.getElementById("panicBtn"),panicOverlay=document.getElementById("panicOverlay"),panicList=document.getElementById("panicList"),panicCount=document.getElementById("panicCount"),calmBtn=document.getElementById("calmBtn"),clearBtn=document.getElementById("clearBtn"),toast=document.getElementById("toast");
+    const reliefSection=document.getElementById("reliefSection"),panicReliefBtn=document.getElementById("panicReliefBtn");
+    const ventText=document.getElementById("ventText"),ventCount=document.getElementById("ventCount"),saveVentBtn=document.getElementById("saveVentBtn"),clearVentBtn=document.getElementById("clearVentBtn"),journalList=document.getElementById("journalList");
+    const meritBtn=document.getElementById("meritBtn"),meritCount=document.getElementById("meritCount"),homeMeritCount=document.getElementById("homeMeritCount"),meritTip=document.getElementById("meritTip"),resetMeritBtn=document.getElementById("resetMeritBtn");
+    const breathCircle=document.getElementById("breathCircle"),breathWord=document.getElementById("breathWord"),breathCount=document.getElementById("breathCount"),breathBtn=document.getElementById("breathBtn");
+    const bubbleBoard=document.getElementById("bubbleBoard"),bubbleStatus=document.getElementById("bubbleStatus"),bubbleResetBtn=document.getElementById("bubbleResetBtn");
+    let selectedMood="😵‍💫"; let journal=loadJournal(); let merit=loadMerit(); let breathing=false; let poppedBubbles=0;
+    let currentFilter="all"; let tasks=loadTasks();
+
+    function uid(){return (crypto&&crypto.randomUUID)?crypto.randomUUID():Date.now()+"_"+Math.random().toString(16).slice(2)}
+    function toDateInputValue(date){const y=date.getFullYear(),m=String(date.getMonth()+1).padStart(2,"0"),d=String(date.getDate()).padStart(2,"0");return `${y}-${m}-${d}`}
+    function addDays(base,days){const d=new Date(base);d.setHours(12,0,0,0);d.setDate(d.getDate()+days);return toDateInputValue(d)}
+    function getDefaultTasks(){const now=new Date();return [
+      {id:uid(),name:"確認舞台及音控設備",category:"舞台／設備",importance:"high",urgency:"high",deadline:addDays(now,0),completed:false,createdAt:Date.now()-5000},
+      {id:uid(),name:"確認主持人到場時間",category:"表演者／主持人",importance:"high",urgency:"high",deadline:addDays(now,1),completed:false,createdAt:Date.now()-4000},
+      {id:uid(),name:"確認工作人員集合時間",category:"工作人員",importance:"high",urgency:"medium",deadline:addDays(now,2),completed:false,createdAt:Date.now()-3000},
+      {id:uid(),name:"印製工作證",category:"行政",importance:"medium",urgency:"medium",deadline:addDays(now,3),completed:false,createdAt:Date.now()-2000},
+      {id:uid(),name:"整理活動照片資料夾",category:"宣傳",importance:"low",urgency:"low",deadline:addDays(now,7),completed:false,createdAt:Date.now()-1000}
+    ]}
+    function loadTasks(){const raw=localStorage.getItem(STORAGE_KEY);if(raw){try{const parsed=JSON.parse(raw);if(Array.isArray(parsed))return parsed}catch(err){console.warn("資料解析失敗",err)}}const defaults=getDefaultTasks();localStorage.setItem(STORAGE_KEY,JSON.stringify(defaults));return defaults}
+    function saveTasks(){localStorage.setItem(STORAGE_KEY,JSON.stringify(tasks))}
+    function startOfToday(){const d=new Date();d.setHours(0,0,0,0);return d}
+    function daysUntil(dateString){if(!dateString)return null;const target=new Date(dateString+"T00:00:00");return Math.round((target-startOfToday())/86400000)}
+    function deadlineScore(dateString){const d=daysUntil(dateString);if(d===null)return 0;if(d<0)return 40;if(d===0)return 35;if(d===1)return 30;if(d<=3)return 24;if(d<=7)return 15;return 5}
+    function getPriorityScore(task){if(task.completed)return -999;const levelScore={high:35,medium:20,low:8};return (levelScore[task.importance]||0)+(levelScore[task.urgency]||0)+deadlineScore(task.deadline)}
+    function getPriorityLevel(task){const score=getPriorityScore(task);if(score>=75)return"high";if(score>=45)return"medium";return"low"}
+    function priorityLabel(task){const level=getPriorityLevel(task);return level==="high"?"🔴 高優先":level==="medium"?"🟡 中優先":"🟢 低優先"}
+    function levelText(value){return value==="high"?"高":value==="medium"?"中":"低"}
+    function formatDate(dateString){if(!dateString)return"";const d=new Date(dateString+"T00:00:00");return `${d.getMonth()+1}/${d.getDate()}`}
+    function deadlineInfo(dateString){if(!dateString)return{text:"未設定期限",cls:""};const d=daysUntil(dateString);if(d<0)return{text:`已逾期 ${Math.abs(d)} 天`,cls:"overdue"};if(d===0)return{text:"今天截止",cls:"today"};if(d===1)return{text:"明天截止",cls:"soon"};if(d<=3)return{text:`${d} 天後截止`,cls:"soon"};return{text:`${formatDate(dateString)} 截止`,cls:""}}
+    function reasonFor(task){if(!task)return"可以休息一下，或新增下一件活動工作。";const reasons=[],due=daysUntil(task.deadline);if(task.importance==="high")reasons.push("重要程度高");if(task.urgency==="high")reasons.push("緊急程度高");if(due!==null){if(due<0)reasons.push("已經超過截止日期");else if(due===0)reasons.push("今天截止");else if(due===1)reasons.push("明天截止");else if(due<=3)reasons.push(`${due} 天內截止`)}if(reasons.length===0)reasons.push("目前在未完成任務中的優先度最高");return `${reasons.join("、")}。其他事情先不用急。`}
+    function sortedTasks(){return [...tasks].sort((a,b)=>{if(a.completed!==b.completed)return a.completed?1:-1;const diff=getPriorityScore(b)-getPriorityScore(a);if(diff!==0)return diff;const da=a.deadline?new Date(a.deadline).getTime():Infinity,db=b.deadline?new Date(b.deadline).getTime():Infinity;if(da!==db)return da-db;return a.createdAt-b.createdAt})}
+    function filteredTasks(){const ordered=sortedTasks();if(currentFilter==="pending")return ordered.filter(t=>!t.completed);if(currentFilter==="done")return ordered.filter(t=>t.completed);if(currentFilter==="high")return ordered.filter(t=>!t.completed&&getPriorityLevel(t)==="high");return ordered}
+    function escapeHTML(value){return String(value).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+
+    function loadJournal(){
+      try{const raw=localStorage.getItem(JOURNAL_KEY);const data=raw?JSON.parse(raw):[];return Array.isArray(data)?data:[]}catch(e){return []}
+    }
+    function saveJournal(){localStorage.setItem(JOURNAL_KEY,JSON.stringify(journal))}
+    function loadMerit(){const n=parseInt(localStorage.getItem(MERIT_KEY)||"0",10);return Number.isFinite(n)?Math.max(0,n):0}
+    function saveMerit(){localStorage.setItem(MERIT_KEY,String(merit))}
+    function formatJournalTime(ts){const d=new Date(ts);return `${d.getMonth()+1}/${d.getDate()} ${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`}
+    function renderJournal(){
+      if(!journal.length){journalList.innerHTML='<div style="font-size:12px;color:var(--muted);padding-top:4px;">目前還沒有心情紀錄。寫完一則，就先把它放在這裡。</div>';return}
+      journalList.innerHTML=journal.slice(0,3).map(item=>`<div class="journal-item"><div class="journal-top"><span>${item.mood} ${formatJournalTime(item.createdAt)}</span><button type="button" class="journal-delete" data-journal-id="${item.id}">刪除</button></div><div class="journal-text">${escapeHTML(item.text)}</div></div>`).join("") + (journal.length>3?`<div style="font-size:12px;color:var(--muted);text-align:center;">另外還有 ${journal.length-3} 則紀錄保存在瀏覽器裡</div>`:"");
+    }
+    function renderMerit(){meritCount.textContent=merit;homeMeritCount.textContent=merit;meritTip.textContent=merit===0?"敲一下，功德 +1":merit%10===0?`功德 ${merit}！總召今天也很努力。`:merit>=5?"再忙也有在累積好事。":"有敲有保庇，繼續慢慢來。"}
+    function delay(ms){return new Promise(resolve=>setTimeout(resolve,ms))}
+    async function runBreathPhase(label,seconds,className,round){
+      breathCircle.className=`breath-circle ${className}`.trim();
+      breathCircle.style.transitionDuration=`${seconds}s, .4s`;
+      breathCount.textContent=`第 ${round} / 3 輪`;
+      for(let left=seconds;left>=1;left--){
+        breathWord.textContent=`${label} ${left} 秒`;
+        await delay(1000);
+      }
+    }
+    async function startBreathing(){
+      if(breathing)return;
+      breathing=true;
+      breathBtn.disabled=true;
+      breathBtn.textContent="呼吸中…";
+      for(let round=1;round<=3;round++){
+        await runBreathPhase("吸氣",4,"inhale",round);
+        await runBreathPhase("停一下",2,"",round);
+        await runBreathPhase("慢慢呼氣",6,"exhale",round);
+      }
+      breathCircle.className="breath-circle";
+      breathCircle.style.transitionDuration="";
+      breathWord.textContent="完成了 🌿";
+      breathCount.textContent="三輪完成，可以慢慢回來了";
+      breathBtn.disabled=false;
+      breathBtn.textContent="再呼吸一次";
+      breathing=false;
+    }
+
+    const bubbleWords=["廠商不回","場地變動","一直催稿","預算不夠","臨時改流程","訊息爆量","器材還沒到","又要開會","一直被問","時間不夠","表單沒交","突發狀況"];
+    function renderBubbles(){
+      poppedBubbles=0;
+      bubbleStatus.textContent=`已戳 0 / ${bubbleWords.length}`;
+      bubbleBoard.innerHTML=bubbleWords.map((word,index)=>`<button type="button" class="anxiety-bubble" data-bubble-index="${index}" aria-label="戳爆焦慮泡泡：${word}">${word}</button>`).join("");
+    }
+
+
+    function render(){const pending=tasks.filter(t=>!t.completed),done=tasks.filter(t=>t.completed),total=tasks.length,percent=total===0?0:Math.round(done.length/total*100);totalCount.textContent=total;pendingCount.textContent=pending.length;doneCount.textContent=done.length;progressText.textContent=`${percent}%`;progressBar.style.width=`${percent}%`;const top=sortedTasks().find(t=>!t.completed);if(top){focusTask.textContent=top.name;focusReason.textContent=reasonFor(top);panicBtn.disabled=false;panicBtn.style.opacity="1"}else{focusTask.textContent=total===0?"目前沒有任務":"全部完成了 🎉";focusReason.textContent=total===0?"先新增一件活動工作，我會幫你排順序。":"今天可以先休息一下，你已經處理完全部工作。";panicBtn.disabled=true;panicBtn.style.opacity=".5"}renderTasks()}
+    function renderTasks(){const list=filteredTasks();if(list.length===0){taskList.innerHTML='<div class="empty"><div class="emoji">🌷</div><strong>這個分類目前沒有任務</strong><div style="margin-top:6px;">看起來暫時很安靜。</div></div>';return}taskList.innerHTML=list.map(task=>{const p=getPriorityLevel(task),due=deadlineInfo(task.deadline);return `<article class="task ${task.completed?"completed":""}"><div class="priority-strip ${task.completed?"low":p}"></div><div class="task-main"><div class="task-title">${escapeHTML(task.name)}</div><div class="meta"><span class="pill">${escapeHTML(task.category)}</span><span class="pill">${task.completed?"✅ 已完成":priorityLabel(task)}</span><span class="pill">重要：${levelText(task.importance)}</span><span class="pill">緊急：${levelText(task.urgency)}</span><span class="pill deadline ${due.cls}">${due.text}</span></div></div><div class="task-actions"><button class="icon-btn ${task.completed?"undo":"complete"}" type="button" data-action="toggle" data-id="${task.id}">${task.completed?"↩ 恢復":"✓ 完成"}</button><button class="icon-btn delete" type="button" data-action="delete" data-id="${task.id}">刪除</button></div></article>`}).join("")}
+    function showToast(message){toast.textContent=message;toast.classList.add("show");clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.classList.remove("show"),1800)}
+    taskForm.addEventListener("submit",event=>{event.preventDefault();const name=taskName.value.trim();if(!name){showToast("先幫這件事取個名字吧！");taskName.focus();return}tasks.push({id:uid(),name,category:category.value,importance:importance.value,urgency:urgency.value,deadline:deadline.value,completed:false,createdAt:Date.now()});saveTasks();taskForm.reset();importance.value="medium";urgency.value="medium";render();showToast("已加入任務，我幫你重新排好順序了。");taskName.focus()});
+    taskList.addEventListener("click",event=>{const btn=event.target.closest("button[data-action]");if(!btn)return;const id=btn.dataset.id,task=tasks.find(t=>t.id===id);if(!task)return;if(btn.dataset.action==="toggle"){task.completed=!task.completed;saveTasks();render();showToast(task.completed?"完成一件了，下一件慢慢來。":"任務已恢復到待處理。")};if(btn.dataset.action==="delete"&&confirm(`確定要刪除「${task.name}」嗎？`)){tasks=tasks.filter(t=>t.id!==id);saveTasks();render();showToast("任務已刪除。")}});
+    document.querySelectorAll(".filter-btn").forEach(btn=>btn.addEventListener("click",()=>{currentFilter=btn.dataset.filter;document.querySelectorAll(".filter-btn").forEach(x=>x.classList.remove("active"));btn.classList.add("active");renderTasks()}));
+    panicBtn.addEventListener("click",()=>{const pending=sortedTasks().filter(t=>!t.completed);if(!pending.length)return;panicCount.textContent=`目前還有 ${pending.length} 件事情沒有完成`;panicList.innerHTML=pending.slice(0,3).map((task,index)=>{const due=deadlineInfo(task.deadline);return `<div class="panic-item"><div class="panic-number">0${index+1}</div><div><strong>${escapeHTML(task.name)}</strong><span>${priorityLabel(task)} ・ ${due.text}</span></div></div>`}).join("");panicOverlay.classList.add("show");document.body.style.overflow="hidden"});
+    function closePanic(){panicOverlay.classList.remove("show");document.body.style.overflow=""} calmBtn.addEventListener("click",closePanic);panicOverlay.addEventListener("click",e=>{if(e.target===panicOverlay)closePanic()});document.addEventListener("keydown",e=>{if(e.key==="Escape"&&panicOverlay.classList.contains("show"))closePanic()});
+
+    document.querySelectorAll(".mood-btn").forEach(btn=>btn.addEventListener("click",()=>{
+      selectedMood=btn.dataset.mood;document.querySelectorAll(".mood-btn").forEach(x=>x.classList.remove("active"));btn.classList.add("active");
+    }));
+    document.querySelector('.mood-btn[data-mood="😵‍💫"]').classList.add("active");
+    ventText.addEventListener("input",()=>{ventCount.textContent=`${ventText.value.length} / 800`});
+    clearVentBtn.addEventListener("click",()=>{ventText.value="";ventCount.textContent="0 / 800";ventText.focus()});
+    saveVentBtn.addEventListener("click",()=>{
+      const text=ventText.value.trim();if(!text){showToast("想罵什麼就寫一點，不用完整。");ventText.focus();return}
+      journal.unshift({id:uid(),mood:selectedMood,text,createdAt:Date.now()});
+      if(journal.length>30)journal=journal.slice(0,30);saveJournal();renderJournal();ventText.value="";ventCount.textContent="0 / 800";showToast("好，這些先交給靜靜保管。你不用一直記在腦袋裡。");
+    });
+    journalList.addEventListener("click",e=>{const btn=e.target.closest("[data-journal-id]");if(!btn)return;const id=btn.dataset.journalId;if(confirm("確定刪除這則心情紀錄嗎？")){journal=journal.filter(x=>x.id!==id);saveJournal();renderJournal()}});
+    meritBtn.addEventListener("click",()=>{
+      merit++;saveMerit();renderMerit();
+      const plus=document.createElement("span");plus.className="plus-one";plus.textContent="功德 +1";meritBtn.appendChild(plus);setTimeout(()=>plus.remove(),700);
+      if(merit%10===0)showToast(`功德 ${merit}！先不管世界，至少這裡很圓滿。`);
+    });
+    resetMeritBtn.addEventListener("click",()=>{if(merit===0)return;if(confirm("確定要讓功德歸零嗎？")){merit=0;saveMerit();renderMerit()}});
+    breathBtn.addEventListener("click",startBreathing);
+    bubbleBoard.addEventListener("click",e=>{
+      const bubble=e.target.closest(".anxiety-bubble");
+      if(!bubble || bubble.classList.contains("popped"))return;
+      bubble.classList.add("popped");
+      poppedBubbles++;
+      bubbleStatus.textContent=`已戳 ${poppedBubbles} / ${bubbleWords.length}`;
+      if(poppedBubbles===bubbleWords.length){
+        showToast("啪！這一批焦慮全部戳完了。事情還在，但你可以先喘一下。");
+      }
+    });
+    bubbleResetBtn.addEventListener("click",()=>{
+      renderBubbles();
+      showToast("新的焦慮泡泡長出來了，慢慢戳。");
+    });
+    panicReliefBtn.addEventListener("click",()=>{closePanic();setTimeout(()=>{reliefSection.scrollIntoView({behavior:"smooth",block:"start"});ventText.focus()},180)});
+
+    clearBtn.addEventListener("click",()=>{if(!tasks.length){showToast("目前沒有資料可以清除。");return}if(confirm("確定要清除所有任務嗎？\n\n這個動作會刪除瀏覽器中保存的所有活動工作，而且無法復原。")){tasks=[];saveTasks();render();showToast("已清除全部資料。")}});
+    renderJournal(); renderMerit(); renderBubbles();
+    render();
+  </script>
+</body>
+</html>
