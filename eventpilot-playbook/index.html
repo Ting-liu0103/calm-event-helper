@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="EventPilot Playbook：給校園活動總召的實用企劃知識卡。">
+  <title>EventPilot Playbook｜活動企劃知識卡</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="./index.html">
+      <span class="logo">E</span>
+      <span><b>EventPilot</b><small>Playbook</small></span>
+    </a>
+    <a class="rules" href="https://github.com/Ting-liu0103/calm-event-helper/blob/main/eventpilot-playbook/AGENTS.md" target="_blank" rel="noreferrer">查看 AGENTS.md</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <span class="eyebrow">ACTIVITY PLAYBOOK</span>
+        <h1>把活動經驗整理成<br><em>可以重複使用的規則。</em></h1>
+        <p>給校園活動總召的企劃知識卡。網站由一套明確的 AGENTS.md 規則驅動，讓 AI 之後新增內容時仍能維持相同結構與風格。</p>
+        <div class="actions">
+          <a class="btn primary" href="#guides">開始查指南</a>
+          <a class="btn" href="#rules">這套規則怎麼延伸？</a>
+        </div>
+      </div>
+      <div class="hero-cards">
+        <article><strong>01　內容資料化</strong><span>新增指南不用複製 HTML</span></article>
+        <article><strong>02　統一版型</strong><span>首頁與詳細頁自動渲染</span></article>
+        <article><strong>03　AI 有規則可循</strong><span>命名、文案、結構與 QA 都有定義</span></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="guides">
+    <div class="container">
+      <div class="section-head">
+        <div><span class="eyebrow">GUIDES</span><h2>活動企劃指南</h2></div>
+        <p id="result-count"></p>
+      </div>
+      <div class="toolbar">
+        <input id="search-input" type="search" aria-label="搜尋活動企劃指南" placeholder="搜尋：雨備、人力、倒數…">
+        <div id="category-filters" class="filters"></div>
+      </div>
+      <div id="guide-grid" class="guide-grid"></div>
+      <div id="empty-state" class="empty" hidden><b>找不到符合的指南</b><p>換個關鍵字再試一次。</p></div>
+    </div>
+  </section>
+
+  <section class="section soft" id="rules">
+    <div class="container">
+      <span class="eyebrow">REUSABLE RULES</span>
+      <h2>之後新增內容，AI 怎麼知道要怎麼做？</h2>
+      <div class="rule-grid">
+        <article><span>1</span><h3>先讀 AGENTS.md</h3><p>先理解專案目的、視覺、命名、資料欄位與 QA。</p></article>
+        <article><span>2</span><h3>新增一筆資料</h3><p>一般指南只新增到 data/guides.js，不複製 HTML。</p></article>
+        <article><span>3</span><h3>自動沿用同一版型</h3><p>首頁產生新卡片，guide.html 依 id 顯示完整內容。</p></article>
+      </div>
+      <div class="prompt">
+        <small>未來可以直接對 AI 說：</small>
+        <blockquote>「請依照 AGENTS.md，新增一篇『活動遇到下雨怎麼辦？』的指南。」</blockquote>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container footer">
+    EventPilot Playbook · HW9
+    <span>B1228011 劉姮廷</span>
+  </div>
+</footer>
+
+<script src="./data/guides.js"></script>
+<script src="./app.js"></script>
+</body>
+</html>
