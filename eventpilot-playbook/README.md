@@ -12,6 +12,6 @@ AI 課程第九週作業。
 - `AGENTS.md` 規範命名、資料格式、文案、UI 與 QA
 - 可直接放到 GitHub Pages
 
-## 預計網頁
+## 網頁
 
 https://ting-liu0103.github.io/calm-event-helper/eventpilot-playbook/
