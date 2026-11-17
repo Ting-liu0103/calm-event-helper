@@ -14,7 +14,7 @@
 - `wiki/index.md`、`wiki/concepts/*.md`、`wiki/log.md`：概念、來源對照、批次更新與真實操作紀錄。
 - `cards/S*.md`：每卡只整理一個來源，跨來源綜合需在大綱清楚標出多個代號。
 - `outline.md` → `drafts/slides.md` → `slides/index.html`：先規劃、再文案、最後渲染；HTML 階段不得憑空增加事實。
-- `WORKFLOW.md`、`.agents/workflows/topic-slides.md`：流程圖與節點權限；`scripts/lint.py`：可重現靜態檢查；`RUN_LOG.md`、`report.md`：真實執行結果與限制。
+- `WORKFLOW.md`、`.agents/workflows/topic-slides.md`：流程圖與節點權限；`scripts/lint.py`：可重現靜態檢查；`RUN_LOG.md`：真實執行結果與限制。
 - 只把本檔視為**主要** Agent 指令；其他 workflow/skill 文件是細部流程，衝突時以本檔及核准的 `REQUIREMENTS.md` 為準。
 
 ## 3. Ingest 與來源核對

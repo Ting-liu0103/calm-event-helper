@@ -22,7 +22,7 @@
 - **瀏覽器與獨立 AI 驗收：** 僅在實際執行後標記通過；未執行必須標「待驗證」。
 
 ## 成果範圍
-檔案式 Wiki：`raw/`、`wiki/index.md`、`wiki/concepts/`、`wiki/log.md`；來源證據卡：`cards/`；教學內容：`outline.md`、`drafts/slides.md`、`slides/index.html`；流程與驗證：`AGENTS.md`、`WORKFLOW.md`、`scripts/lint.py`、`RUN_LOG.md`、`report.md`。
+檔案式 Wiki：`raw/`、`wiki/index.md`、`wiki/concepts/`、`wiki/log.md`；來源證據卡：`cards/`；教學內容：`outline.md`、`drafts/slides.md`、`slides/index.html`；流程與驗證：`AGENTS.md`、`WORKFLOW.md`、`scripts/lint.py`、`RUN_LOG.md`。
 
 ## 不可誤述
 檔案式 Wiki 的來源摘要整理，不等於特定 Coding Agent 自動擷取原始全文；靜態 Lint 通過不等於外部網站已部署、JS 實際互動正常、手機畫面無溢出，或獨立內容審查通過。

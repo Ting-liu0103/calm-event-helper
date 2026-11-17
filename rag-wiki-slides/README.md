@@ -10,7 +10,6 @@
 |---|---|---|
 | RAG 入門 Wiki | [開啟 Wiki](https://ting-liu0103.github.io/calm-event-helper/rag-wiki-slides/wiki/) | 五個概念主題、來源對照及原始網址 |
 | 互動式 HTML 簡報 | [開啟 12 張投影片](https://ting-liu0103.github.io/calm-event-helper/rag-wiki-slides/slides/) | RAG 定義、Embedding、FAISS、Pipeline、教學案例、限制與測驗 |
-| 成果與反思報告 | [report.md](report.md) | 實際執行、驗證範圍、問題與修正策略 |
 | 工作流程 | [WORKFLOW.md](WORKFLOW.md) | Graph、檢查關卡與有限次修正 Loop |
 
 **使用者實測：** Wiki 與簡報均能正常開啟；簡報翻頁及互動測驗可正常使用（2026-11-17 於對話確認）。
@@ -48,7 +47,7 @@
 | `python3 scripts/lint.py` 實際執行 | 未執行；已提供可重現腳本 |
 | 手機版版面、獨立 AI 逐條內容審查 | 未列入已通過項目 |
 
-以上靜態檢查**不等於**原始來源忠實度審查或 Python Lint 的執行結果。詳見 [成果報告](report.md) 與 [執行紀錄](RUN_LOG.md)。
+以上靜態檢查**不等於**原始來源忠實度審查或 Python Lint 的執行結果。詳細查核方式與實際操作紀錄見 [執行紀錄](RUN_LOG.md)。
 
 ## 資料與實作範圍
 

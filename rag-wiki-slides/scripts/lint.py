@@ -22,7 +22,7 @@ REQUIRED = [
     "wiki/index.md", "wiki/log.md", "wiki/index.html",
     "outline.md", "drafts/slides.md", "slides/index.html",
     "WORKFLOW.md", "SKILL.md", ".agents/workflows/topic-slides.md",
-    "RUN_LOG.md", "report.md",
+    "RUN_LOG.md",
 ]
 for name in REQUIRED:
     check((ROOT / name).is_file(), f"required file: {name}")
