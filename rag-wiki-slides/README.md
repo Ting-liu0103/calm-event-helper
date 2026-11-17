@@ -1,37 +1,30 @@
-# HW10｜RAG 入門 Wiki × 教學 HTML 簡報
+# HW10｜RAG 入門 Wiki × 互動式 HTML 簡報
 
 **長庚大學｜B1228011｜AI四｜劉姮廷**
 
-## 成果連結
-- [Wiki HTML 展示](https://ting-liu0103.github.io/calm-event-helper/rag-wiki-slides/wiki/)
-- [12 張教學 HTML 簡報](https://ting-liu0103.github.io/calm-event-helper/rag-wiki-slides/slides/)
-- [完整作業繳交草稿](SUBMISSION.md)
+## 成果
+- [Wiki 展示](https://ting-liu0103.github.io/calm-event-helper/rag-wiki-slides/wiki/)
+- [12 張互動式 HTML 簡報](https://ting-liu0103.github.io/calm-event-helper/rag-wiki-slides/slides/)
+- [提交草稿](SUBMISSION.md)
 
-## 對照老師第十週 PPT
-| 要求 | 對應檔案 |
-|---|---|
-| 先討論再生成 | [REQUIREMENTS.md](REQUIREMENTS.md) |
-| AGENTS.md | [AGENTS.md](AGENTS.md) |
-| 至少 5 篇 ingest | [raw/](raw/) 5 份來源摘要，三批整理紀錄見 [wiki/log.md](wiki/log.md) |
-| Wiki 索引 | [wiki/index.md](wiki/index.md) 與 [wiki/concepts/](wiki/concepts/) |
-| 證據卡 | [cards/](cards/) |
-| 簡報大綱／逐頁稿 | [outline.md](outline.md)、[drafts/slides.md](drafts/slides.md) |
-| Loop 規格 | [SKILL.md](SKILL.md) |
-| Graph | [.agents/workflows/topic-slides.md](.agents/workflows/topic-slides.md) |
-| 檢查腳本 | [scripts/lint.py](scripts/lint.py) |
-| 執行與反思 | [report.md](report.md)、[RUN_LOG.md](RUN_LOG.md) |
+> 以上為預定 GitHub Pages 網址，是否可正常部署、操作及在手機瀏覽，**尚待實測**。
 
-## 執行靜態檢查
+## 需求與流程
+- [正式 10 題需求訪談與核准結果](REQUIREMENTS.md)
+- [唯一主要 Agent 工作規格](AGENTS.md)
+- [來源清單及分批規則](INGEST_LIST.md)
+- [Wiki 索引](wiki/index.md)、[概念頁](wiki/concepts/)、[真實複核紀錄](wiki/log.md)
+- [Graph 與 Loop](WORKFLOW.md)、[工作流程節點](.agents/workflows/topic-slides.md)
+- [教學大綱](outline.md)、[逐頁稿](drafts/slides.md)、[HTML](slides/index.html)
+- [Lint 腳本](scripts/lint.py)、[執行紀錄](RUN_LOG.md)、[反思報告](report.md)
+
+## 本機執行靜態 Lint
 ```bash
+cd rag-wiki-slides
 python3 scripts/lint.py
 ```
 
-## 實作界線
-這是一份**以 5 份公開來源摘要建立的檔案式 LLM Wiki**，不是線上 Wiki 平台自動抓取的全文，也不是已經由 Antigravity 跑過的 Agent 實際紀錄。GitHub Pages 網址是否已部署、手機版與獨立 AI 審查，均須實際驗收。請勿把待測項目寫成已通過。
+**注意：** 本次 GitHub connector 讀回的 39 項靜態稽核為 39 PASS、0 FAIL；`python3 scripts/lint.py` 在隔離環境因無法 clone GitHub 專案而**未實際執行**。此腳本也不能證明來源內容忠實、瀏覽器互動、手機版、外部 URL 可達或獨立 AI 審查通過。
 
-## 原始參考
-- [S1 RAG paper](https://arxiv.org/abs/2005.11401)
-- [S2 Sentence Transformers](https://www.sbert.net/examples/sentence_transformer/applications/semantic-search/README.html)
-- [S3 FAISS](https://github.com/facebookresearch/faiss)
-- [S4 EmbeddingGemma](https://huggingface.co/google/embeddinggemma-300m)
-- [S5 Hugging Face RAG](https://huggingface.co/docs/transformers/model_doc/rag)
+## 來源性質
+本專案以 1 篇學術論文與 4 份官方技術文件整理 5 份繁中摘要，屬於檔案式 Wiki。**不是**原始全文鏡像，也不應冒稱已由課堂 Coding Agent 完成五份全文 ingest。

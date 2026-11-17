@@ -1,19 +1,41 @@
-# HW10 檢查紀錄
+# HW10｜真實執行與測試紀錄
 
-## 本次產出與可重現檢查
+## 2026-11-17：依使用者正式核准需求修訂既有專案
 
-| 檢查項目 | 方法 | 目前狀態 |
+**GitHub repo：** `Ting-liu0103/calm-event-helper`，目錄 `rag-wiki-slides/`。
+
+| 步驟 | 實際方法 | 實際結果 |
 |---|---|---|
-| 五個來源 | 對照 INGEST_LIST.md 的五筆來源 | 已列出，平台 ingest 待驗證 |
-| Wiki 與投影片對應 | 比對 Wiki 的 S1–S5 與每張簡報引用 | 已在內容設計中標示 |
-| 初學者教學順序 | 定義 → 比喻 → embedding → index → 流程 → 限制 → 小測驗 | 已寫入簡報 |
-| HTML 可開啟 | 開啟 GitHub Pages 兩個連結 | 待部署完成後實測 |
-| 互動功能 | 點「下一張」、鍵盤左右鍵、目錄跳轉、列印 | 待瀏覽器實測 |
-| LLM Wiki ingest | 在課堂 LLM Wiki 平台上匯入五筆資料 | 尚未完成／未取得平台紀錄 |
+| 檢查現有專案 | GitHub connector 讀取 main tree、AGENTS、Wiki、來源卡、HTML、lint 與既有報告 | 確認既有 5 份來源摘要、5 張卡、5 個概念頁、12 張 HTML 投影片 |
+| 核對既有提交 | GitHub commits API 查詢 `raw/` 與 `wiki/log.md` 歷史 | `raw/S1–S5.md` 在 2026-11-16 已逐檔提交；不是本次訪談後才產生 |
+| 核准需求文件 | GitHub commit `c689df75b88c22e19d4c40080b4ff95e15865d06` | 更新正式訪談結果、AGENTS、Graph、Ingest 規則 |
+| Wiki 批次複核 1 | GitHub commit `58dc23dd9bca7721126c0ad5da6fc92d8a1412f8` | 更新 RAG 與 Embedding 概念頁 |
+| Wiki 批次複核 2 | GitHub commit `e2514995d99dbe9d2c376317cc472ebc1c13a133` | 更新 FAISS 與 Pipeline 概念頁 |
+| Wiki 批次複核 3 | GitHub commit `3194cd92d5d5614fc25b2065b1939a56e27ca107` | 更新品質概念與 Wiki 索引 |
+| 簡報對齊 | GitHub commit `908465196c333be35b15d3adb9a89908e2bd2d51` | 保留 12 張，補中英術語與 Wiki 來源入口 |
+| Lint 擴充 | GitHub commit `c681c6340f9e8f29141363d01fcc153e23671c39` | 增加來源 URL、概念頁與每頁引用、12 張簡報等檢查 |
 
-## 反思（初步設計判斷，非捏造實測）
-**預期最容易出錯的節點：Wiki 查詢後整理重點。** 例如把「語意相似」誤寫成「內容一定正確」，或把「引用檢索文件」誤寫成「答案必然無幻覺」。
+## 已執行的靜態稽核（不是 Python lint 執行）
 
-**檢查往前移：** 最初若在 HTML 產生後才看引用，錯誤會散布到多張投影片。現在改為「查詢 Wiki → 整理主張與來源代號 → 檢查主張有無支持 → 才生成 HTML」。
+**方法：** 使用 GitHub connector 重新讀取 main 分支共 20 個相關檔案，透過 JavaScript 進行 39 項字串／結構比對。
 
-**下一步實測：** 在課堂 LLM Wiki 完成五篇 ingest，保存來源清單及至少兩次查詢的截圖；在 GitHub Pages 測試按鈕與鍵盤，將真實結果和失敗案例填回此紀錄。以上未實測項目不能當成已完成的執行證據。
+**結果：39 PASS、0 FAIL。** 比對內容包括：五份 raw 來源網址、五張來源卡存在性、Wiki 索引中的五個原始網址、五個概念頁各自對應的來源 URL、12 張投影片數量、9 張事實性投影片的來源代號、導航／測驗程式標記、需求核准與三次重試規則。
+
+**重要限制：** 39 項是本次 GitHub 讀回的**程式化靜態稽核**，不是 `python3 scripts/lint.py` 的執行結果，也不是實際瀏覽器操作。不能以此宣稱 JavaScript 執行、手機版、外部連結或內容忠實度全部通過。
+
+## 嘗試但未完成的檢查
+- 曾嘗試在隔離的 Python/容器環境透過 `git clone` 下載 GitHub 專案並執行 `python3 scripts/lint.py`，但環境無法解析 `github.com`，下載失敗，**Python lint 尚未執行**。
+- 因此請使用者於本機 clone 或下載 repo 後，執行 `cd rag-wiki-slides && python3 scripts/lint.py`，保存完整終端輸出。
+
+## 仍待人工／瀏覽器驗證
+- 原始來源內容是否逐條支持 Wiki 與投影片的重要主張（靜態字串比對不能取代此項）。
+- GitHub Pages 的 Wiki、HTML 簡報是否已成功部署及開啟。
+- 上一張／下一張、方向鍵、互動測驗、來源連結是否在瀏覽器正常。
+- 手機版是否有溢出或遮擋，及列印版面。
+- 是否有獨立新對話 AI Reviewer 的內容審查。
+- 逐頁大綱的獨立人工核准、課堂 Coding Agent 實際 Ingest 證據（若需要）。
+
+## 修正與反思
+**已知風險：**「語意相似 ≠ 事實正確」、「FAISS ≠ 生成模型」、「校園活動雨備 ≠ 真實 Wiki 查詢」是既有內容需明確標示的界線。此次在概念頁、流程規則與簡報中補強，並把來源 URL 比對放在渲染之前。
+
+**Loop 狀態：** 已建立最多 3 次的修正規格；本次未發生 3 次自動重試，不能把設計寫成已跑過的失敗循環。
