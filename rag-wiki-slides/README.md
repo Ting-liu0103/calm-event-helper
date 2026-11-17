@@ -10,7 +10,7 @@
 ## 對照老師第十週 PPT
 | 要求 | 對應檔案 |
 |---|---|
-| 先討論再生成 | [REQUIREMENTS.md](REQUIREMENTS.md)（待使用者確認） |
+| 先討論再生成 | [REQUIREMENTS.md](REQUIREMENTS.md) |
 | AGENTS.md | [AGENTS.md](AGENTS.md) |
 | 至少 5 篇 ingest | [raw/](raw/) 5 份來源摘要，三批整理紀錄見 [wiki/log.md](wiki/log.md) |
 | Wiki 索引 | [wiki/index.md](wiki/index.md) 與 [wiki/concepts/](wiki/concepts/) |
