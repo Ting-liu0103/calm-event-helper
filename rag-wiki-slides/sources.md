@@ -1,14 +1,13 @@
-# Source Coverage Gate
+# Source Coverage Gate｜來源覆蓋關卡
 
-## 已整理來源（5 份）
-| ID | 來源 | 對應概念 |
-|---|---|---|
-| S1 | Lewis et al. RAG 論文 | 定義、檢索與生成 |
-| S2 | Sentence Transformers Semantic Search | Embedding、語意搜尋 |
-| S3 | FAISS 官方專案 | 向量索引 |
-| S4 | EmbeddingGemma 模型卡 | Embedding 模型實例 |
-| S5 | Hugging Face RAG 模型文件 | Retriever、Generator |
+| ID | 來源類型 | 對應概念 | 原始網址 |
+|---|---|---|---|
+| S1 | 研究論文 | RAG 動機、定義、檢索與生成 | https://arxiv.org/abs/2005.11401 |
+| S2 | 官方技術文件 | Embedding、Semantic Search | https://www.sbert.net/examples/sentence_transformer/applications/semantic-search/README.html |
+| S3 | 官方程式庫 | FAISS、向量索引 | https://github.com/facebookresearch/faiss |
+| S4 | 官方模型卡 | Embedding 模型例子 | https://huggingface.co/google/embeddinggemma-300m |
+| S5 | 官方模型文件 | Retriever、Generator | https://huggingface.co/docs/transformers/model_doc/rag |
 
-**覆蓋率關卡：** 5 份來源對應 5 個核心概念，滿足「至少 3 份相關來源才繼續」的專案規則。這是主題覆蓋的靜態檢查，不是自動判定每一條主張都正確。
+**靜態覆蓋判定：** 目前列出 5 份、1 篇論文＋4 份官方文件，覆蓋 5 個主題。這只證明有資料清單，不能取代每一個事實主張的忠實度檢查。
 
-**來源性質：** 1 篇研究論文 + 4 份技術／模型文件；若課堂要求「至少 5 篇學術論文」，需再補 4 篇論文，不能把官方文件稱為論文。
+**證據邊界：** RAG 不保證回答正確；語意相似不保證真實；FAISS 只負責向量搜尋；特定 Embedding 模型和 Hugging Face RAG 實作不代表所有系統。文件切分與品質評估的設計建議，需標註為教學延伸而非原始論文的統一規定。
