@@ -5,7 +5,6 @@
 ## 成果
 - [Wiki 展示](https://ting-liu0103.github.io/calm-event-helper/rag-wiki-slides/wiki/)
 - [12 張互動式 HTML 簡報](https://ting-liu0103.github.io/calm-event-helper/rag-wiki-slides/slides/)
-- [提交草稿](SUBMISSION.md)
 
 > 以上為預定 GitHub Pages 網址，是否可正常部署、操作及在手機瀏覽，**尚待實測**。
 
