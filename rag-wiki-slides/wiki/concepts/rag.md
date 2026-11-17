@@ -1,9 +1,13 @@
-# RAG：先檢索再生成
+# RAG：檢索增強生成（Retrieval-Augmented Generation）
 
-**核心定義：** Retrieval-Augmented Generation 將外部文件檢索與語言模型的生成能力結合，讓回答可以使用檢索得到的內容作為上下文。[S1][S5]
+**核心定義：** RAG 將外部文件檢索（retrieval）與語言模型生成（generation）結合，讓模型回答時可以參考檢索得到的上下文。[S1][S5]
 
-**初學者比喻：** 直接問模型像閉卷作答；RAG 像先找資料再作答。比喻是教學輔助，不能理解成 RAG 一定答對。
+**初學者比喻：** 直接問模型像閉卷作答；RAG 像先找資料再作答。這是教學比喻，**不表示 RAG 一定答對**。
 
-**常見誤解：**「RAG 可以完全消除幻覺」不成立；檢索品質與模型使用證據的方式仍要另外檢查。
+**常見誤解：** RAG 不能保證消除幻覺；仍須核對文件是否相關，以及回答是否真正受來源支持。
 
-**來源：** [S1](../../raw/S1.md)、[S5](../../raw/S5.md)
+## 來源對照
+- [S1] Lewis et al. (2020), *Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks*：https://arxiv.org/abs/2005.11401
+- [S5] Hugging Face Transformers, RAG model documentation：https://huggingface.co/docs/transformers/model_doc/rag
+
+**資料邊界：** S5 描述特定 RAG 模型的介面，不能推論為所有 RAG 系統的唯一實作。
